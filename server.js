@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use('/upload', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -55,7 +55,7 @@ app.get('/api/posts', async (req, res) => {
     }
 });
 
-app.get('/api/posts', upload.single('file'), async (req, res) => {
+app.post('/api/posts', upload.single('file'), async (req, res) => {
     try {
         const { title, content } = req.body;
         const file = req.file ? req.file.filename : undefined;
@@ -73,9 +73,10 @@ app.get('/api/posts', upload.single('file'), async (req, res) => {
     }
 });
 
-app.post('api/posts/like/:postId', async (req, res) => {
+app.post('/api/posts/like/:postId', async (req, res) => {
     try {
         const postId = req.params.postId;
+        console.log(postId);
         const post = await Post.findById(postId);
 
         if (!post) {
@@ -92,7 +93,7 @@ app.post('api/posts/like/:postId', async (req, res) => {
     }
 });
 
-app.post('api/posts/comment/:postId', async (req, res) => {
+app.post('/api/posts/comment/:postId', async (req, res) => {
     try {
         const postId = req.params.postId;
         const post = await Post.findById(postId);
